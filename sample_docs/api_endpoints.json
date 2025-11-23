@@ -1,0 +1,71 @@
+{
+  "service_name": "ShopSmart Checkout Mock API",
+  "base_url": "https://api.shopsmart.test",
+  "version": "v1",
+  "endpoints": [
+    {
+      "name": "Create Checkout Session",
+      "method": "POST",
+      "path": "/checkout/session",
+      "description": "Creates a checkout session from the items currently in the cart.",
+      "request_body": {
+        "customer": {
+          "full_name": "string",
+          "email": "string",
+          "address": "string",
+          "pincode": "string"
+        },
+        "items": [
+          {
+            "product_id": "string",
+            "quantity": "integer"
+          }
+        ],
+        "discount_code": "string | null",
+        "shipping_method": "standard | express",
+        "payment_method": "card | paypal"
+      },
+      "success_response": {
+        "status": "success",
+        "order_id": "SS-CHK-87421",
+        "payable_amount": 11337,
+        "currency": "INR"
+      }
+    },
+    {
+      "name": "Validate Discount Code",
+      "method": "POST",
+      "path": "/discount/validate",
+      "description": "Validates the discount code entered in the checkout page.",
+      "request_body": {
+        "code": "string",
+        "subtotal": "integer"
+      },
+      "success_response": {
+        "status": "valid",
+        "code": "AUTOMATE10",
+        "discount_percentage": 10
+      },
+      "error_response": {
+        "status": "invalid",
+        "message": "Invalid or expired discount code"
+      }
+    },
+    {
+      "name": "Simulate Payment",
+      "method": "POST",
+      "path": "/payment/charge",
+      "description": "Simulates payment confirmation for automated tests.",
+      "request_body": {
+        "order_id": "string",
+        "amount": "integer",
+        "payment_method": "card | paypal"
+      },
+      "success_response": {
+        "status": "paid",
+        "transaction_id": "TXN-123456",
+        "message": "Payment successful"
+      }
+    }
+  ]
+}

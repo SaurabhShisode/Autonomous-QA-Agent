@@ -1,0 +1,43 @@
+Form Validation Rules for ShopSmart Checkout
+
+1. Full name field
+   Input id: full-name
+   Required: yes
+   Rule: must contain at least two characters and cannot be only whitespace.
+   Error element id: error-name
+   Error message text: "Name is required"
+
+2. Email field
+   Input id: email
+   Required: yes
+   Rule: must contain "@" and "." and must not contain spaces. Basic pattern validation is sufficient for tests.
+   Error element id: error-email
+   Error message text: "Valid email is required"
+
+3. Address field
+   Input id: address-line
+   Required: yes
+   Rule: must contain at least ten characters to ensure that street and area are provided.
+   Error element id: error-address
+   Error message text: "Address cannot be empty"
+
+4. Pincode field
+   Input id: pincode
+   Required: yes
+   Rule: must be exactly six digits. Only numeric characters allowed.
+   Error element id: error-pincode
+   Error message text: "Enter a valid 6 digit pincode"
+
+5. Discount code field
+   Input id: discount-code
+   Required: no
+   Rule: when non empty it must match one of the valid codes AUTOMATE10 or AUTOTEST20.
+   Error element id: discount-message
+   Error text for invalid code: "Invalid or expired discount code"
+
+6. Pay now button behavior
+   Button id: pay-now-btn
+   When clicked:
+   - Validate all required fields
+   - If any field fails validation show payment-error-banner and do not show payment-success-banner
+   - If all fields pass validation hide payment-error-banner and show payment-success-banner

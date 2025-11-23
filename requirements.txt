@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+streamlit
+chromadb
+sentence-transformers
+beautifulsoup4
+pymupdf
+unstructured
+requests
+python-dotenv
+selenium

@@ -1,0 +1,72 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# --- FastAPI / Backend ---
+# Local ChromaDB storage
+backend/chroma_db/
+chroma_db/
+*.db
+*.sqlite
+*.parquet
+
+# Sensitive config
+backend/.env
+.env
+
+# --- Node / Streamlit (Frontend) ---
+frontend/node_modules/
+frontend/.streamlit/
+
+# Streamlit cache
+.streamlit/
+frontend/__pycache__/
+
+# --- OS / Editor ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# --- HuggingFace / Model Caches ---
+**/cache/
+**/.cache/
+~/.cache/
+hf_cache/
+huggingface_cache/
+
+# --- Logs ---
+*.log
+logs/
+*.out
+*.err
+
+# --- Uploads and Temp files ---
+uploads/
+temp/
+tmp/
+*.tmp
+
+# --- Miscellaneous ---
+*.swp
+*.swo
+*.bak
+*.old

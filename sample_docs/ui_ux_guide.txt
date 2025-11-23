@@ -1,0 +1,40 @@
+ShopSmart Checkout UI and UX Guide
+
+1. Overall layout
+   The checkout page uses a two column layout on desktop and a single column layout on mobile. The left column contains cart items and customer details. The right column contains the order summary, shipping options, payment options and the Pay now button.
+
+2. Visual style
+   Background color uses a dark theme with near black (#020617 and #0b1120). Text uses light gray (#e5e7eb) with muted labels in #9ca3af. Primary interactive elements like Pay now and the selected state for inputs use an accent green (#22c55e).
+
+3. Key elements and ids
+   Page title id: checkout-title
+   Order id badge: order-id
+   Cart card container: cart-section
+   Customer details card: customer-details-card
+   Order summary card: order-summary-card
+   Discount section container: discount-section
+   Shipping card: shipping-card and radio inputs shipping-standard, shipping-express
+   Payment card: payment-card and radio inputs payment-card, payment-paypal
+   Pay button: pay-now-btn
+   Success banner container: payment-success-banner
+   Error banner container: payment-error-banner
+
+4. Discount experience
+   The discount input field uses id discount-code and the apply button uses id apply-discount-btn. Error or info messages are displayed in the discount-message element. Valid discount codes and their rules are:
+   AUTOMATE10 gives 10 percent off subtotal
+   AUTOTEST20 gives 20 percent off subtotal
+   Discount should not be applied when the code is empty or invalid.
+
+5. Validation and error states
+   Required customer fields and their error elements:
+   Full name: input full-name, error element error-name
+   Email: input email, error element error-email
+   Address: input address-line, error element error-address
+   Pincode: input pincode, error element error-pincode
+   When the Pay now button is clicked, if any required field is empty or invalid, payment-error-banner is displayed with a generic message.
+
+6. Success state
+   On a successful payment, payment-success-banner becomes visible. The title element is payment-success-title and the subtitle is payment-success-subtitle. Automation test cases should verify that success banner appears only after all required fields are valid and Pay now is pressed.
+
+7. Accessibility conventions
+   Quantity inputs have aria-label text to support automation testing based on accessibility attributes. Buttons and inputs use visible labels that match their function so that text based locators can be used as a fallback in tests.

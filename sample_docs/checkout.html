@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ShopSmart Checkout</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0b1120;
+            color: #e5e7eb;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 24px auto 40px;
+            padding: 24px;
+            background-color: #020617;
+            border-radius: 16px;
+            border: 1px solid #1f2937;
+        }
+
+        h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 16px 0 12px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+        }
+
+        .card {
+            background-color: #020617;
+            border-radius: 12px;
+            border: 1px solid #1f2937;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-header span {
+            font-size: 14px;
+            color: #9ca3af;
+        }
+
+        .product-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            gap: 8px;
+        }
+
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .product-name {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .product-meta {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .qty-block {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .qty-input {
+            width: 44px;
+            padding: 4px;
+            border-radius: 8px;
+            border: 1px solid #4b5563;
+            background-color: #020617;
+            color: #e5e7eb;
+            text-align: center;
+        }
+
+        .price {
+            font-size: 15px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .btn {
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid #4b5563;
+            background-color: #020617;
+            color: #e5e7eb;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #22c55e;
+            border-color: #22c55e;
+            color: #020617;
+            font-weight: 600;
+        }
+
+        .btn-secondary {
+            border-color: #6b7280;
+            color: #e5e7eb;
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 8px;
+            padding: 10px;
+            font-size: 15px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            border-radius: 10px;
+            border: 1px solid #4b5563;
+            padding: 8px 10px;
+            background-color: #020617;
+            color: #e5e7eb;
+            font-size: 14px;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus {
+            outline: 1px solid #22c55e;
+            border-color: #22c55e;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #f97373;
+            margin-top: 2px;
+            display: none;
+        }
+
+        .badge {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            background-color: #1f2937;
+            color: #9ca3af;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 4px 0;
+            font-size: 14px;
+        }
+
+        .summary-row.total {
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .summary-label-muted {
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        .inline-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .discount-input {
+            flex: 1;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .radio-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .radio-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 999px;
+            background-color: #22c55e1a;
+            color: #4ade80;
+        }
+
+        .success-banner {
+            display: none;
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid #22c55e33;
+            background-color: #16a34a1a;
+            font-size: 14px;
+        }
+
+        .success-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .success-sub {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #111827;
+            margin: 10px 0;
+        }
+
+        .pill {
+            font-size: 11px;
+            padding: 2px 7px;
+            border-radius: 999px;
+            background-color: #111827;
+            color: #9ca3af;
+        }
+
+        @media (max-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="page">
+    <div class="card-header">
+        <div>
+            <h1 id="checkout-title">Checkout</h1>
+            <span>ShopSmart single page checkout for web automation testing</span>
+        </div>
+        <span class="badge" id="order-id">Order draft ID: SS-CHK-87421</span>
+    </div>
+
+    <div class="grid">
+        <div>
+            <div class="card" id="cart-section">
+                <div class="card-header">
+                    <div>
+                        <h2>Cart items</h2>
+                        <span>Adjust quantities before applying discount</span>
+                    </div>
+                    <span class="pill" id="cart-items-count">3 items</span>
+                </div>
+
+                <div class="product-row" data-product-id="P1001">
+                    <div class="product-info">
+                        <span class="product-name" id="product-name-1">Noise Canceling Headphones</span>
+                        <span class="product-meta">Color Black · Model NCX100</span>
+                    </div>
+                    <div class="qty-block">
+                        <button type="button" class="btn btn-secondary" id="decrease-qty-1">−</button>
+                        <input id="quantity-1" class="qty-input" type="text" value="1" aria-label="Quantity 1">
+                        <button type="button" class="btn btn-secondary" id="increase-qty-1">+</button>
+                    </div>
+                    <div class="price" id="price-1">₹4,999</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="product-row" data-product-id="P1002">
+                    <div class="product-info">
+                        <span class="product-name" id="product-name-2">Mechanical Keyboard</span>
+                        <span class="product-meta">Blue switches · Compact 75 percent layout</span>
+                    </div>
+                    <div class="qty-block">
+                        <button type="button" class="btn btn-secondary" id="decrease-qty-2">−</button>
+                        <input id="quantity-2" class="qty-input" type="text" value="1" aria-label="Quantity 2">
+                        <button type="button" class="btn btn-secondary" id="increase-qty-2">+</button>
+                    </div>
+                    <div class="price" id="price-2">₹3,299</div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="product-row" data-product-id="P1003">
+                    <div class="product-info">
+                        <span class="product-name" id="product-name-3">USB C Docking Station</span>
+                        <span class="product-meta">Dual monitor · 8 in 1 ports</span>
+                    </div>
+                    <div class="qty-block">
+                        <button type="button" class="btn btn-secondary" id="decrease-qty-3">−</button>
+                        <input id="quantity-3" class="qty-input" type="text" value="1" aria-label="Quantity 3">
+                        <button type="button" class="btn btn-secondary" id="increase-qty-3">+</button>
+                    </div>
+                    <div class="price" id="price-3">₹2,499</div>
+                </div>
+            </div>
+
+            <div class="card" id="customer-details-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Customer details</h2>
+                        <span>Required before placing the order</span>
+                    </div>
+                </div>
+
+                <form id="checkout-form">
+                    <div class="field-group">
+                        <label for="full-name">Full name</label>
+                        <input id="full-name" type="text" name="full_name" placeholder="Enter your full name">
+                        <div id="error-name" class="error-message">Name is required</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" placeholder="you@example.com">
+                        <div id="error-email" class="error-message">Valid email is required</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="address-line">Address</label>
+                        <input id="address-line" type="text" name="address" placeholder="Flat, street and area">
+                        <div id="error-address" class="error-message">Address cannot be empty</div>
+                    </div>
+
+                    <div class="field-group">
+                        <label for="pincode">Pincode</label>
+                        <input id="pincode" type="text" name="pincode" placeholder="6 digit pincode">
+                        <div id="error-pincode" class="error-message">Enter a valid 6 digit pincode</div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div>
+            <div class="card" id="order-summary-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Order summary</h2>
+                        <span>Applies to cart items above</span>
+                    </div>
+                </div>
+
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span id="summary-subtotal">₹10,797</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label-muted">Estimated tax</span>
+                    <span id="summary-tax">₹540</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label-muted">Shipping</span>
+                    <span id="summary-shipping">Calculated below</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label-muted">Discount</span>
+                    <span id="summary-discount">₹0</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total payable</span>
+                    <span id="summary-total">₹11,337</span>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="field-group" id="discount-section">
+                    <label for="discount-code">Discount code</label>
+                    <div class="inline-input">
+                        <input id="discount-code" type="text" class="discount-input" placeholder="AUTOMATE10 or AUTOTEST20">
+                        <button id="apply-discount-btn" type="button" class="btn btn-secondary">Apply</button>
+                    </div>
+                    <div id="discount-message" class="error-message">Invalid or expired discount code</div>
+                    <span class="summary-label-muted">Valid codes: AUTOMATE10 gives 10 percent, AUTOTEST20 gives 20 percent on subtotal</span>
+                </div>
+            </div>
+
+            <div class="card" id="shipping-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Shipping method</h2>
+                        <span>Select one option</span>
+                    </div>
+                </div>
+                <div class="radio-group" id="shipping-options">
+                    <label class="radio-item">
+                        <span class="radio-left">
+                            <input type="radio" name="shipping_method" id="shipping-standard" value="standard" checked>
+                            <span>Standard delivery</span>
+                            <span class="tag">Free</span>
+                        </span>
+                        <span>3 to 5 business days</span>
+                    </label>
+                    <label class="radio-item">
+                        <span class="radio-left">
+                            <input type="radio" name="shipping_method" id="shipping-express" value="express">
+                            <span>Express delivery</span>
+                        </span>
+                        <span>₹299 · 1 to 2 days</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="card" id="payment-card">
+                <div class="card-header">
+                    <div>
+                        <h2>Payment method</h2>
+                        <span>Required to place the order</span>
+                    </div>
+                </div>
+
+                <div class="radio-group" id="payment-options">
+                    <label class="radio-item">
+                        <span class="radio-left">
+                            <input type="radio" name="payment_method" id="payment-card" value="card" checked>
+                            <span>Credit or debit card</span>
+                        </span>
+                        <span>Visa, Mastercard, RuPay</span>
+                    </label>
+                    <label class="radio-item">
+                        <span class="radio-left">
+                            <input type="radio" name="payment_method" id="payment-paypal" value="paypal">
+                            <span>PayPal</span>
+                        </span>
+                        <span>Secure redirect</span>
+                    </label>
+                </div>
+
+                <button id="pay-now-btn" type="button" class="btn btn-primary btn-full">Pay now</button>
+
+                <div id="payment-success-banner" class="success-banner">
+                    <div class="success-title" id="payment-success-title">Payment successful</div>
+                    <div class="success-sub" id="payment-success-subtitle">Order SS-CHK-87421 has been placed. A confi

@@ -1,37 +1,53 @@
+import uuid
+from typing import List, Dict, Any
+
 import chromadb
 from sentence_transformers import SentenceTransformer
-from typing import List, Dict
+
 
 class VectorDB:
-    def __init__(self, collection_name: str = "testing_kb"):
-        client = chromadb.PersistentClient(path="chroma_db")
-        self.collection = client.get_or_create_collection(name=collection_name)
-        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+    def __init__(self) -> None:
+        self.client = chromadb.PersistentClient(path="chroma_db")
+        self.collection = self.client.get_or_create_collection(name="documents")
+        self.embedder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+        self.html_sources: Dict[str, str] = {}
 
-    def chunk_text(self, text: str, source: str, chunk_size: int = 800, overlap: int = 100) -> List[Dict]:
-        chunks = []
+    def chunk_text(self, text: str, source: str) -> List[Dict[str, str]]:
+        chunks: List[Dict[str, str]] = []
+        chunk_size = 800
+        overlap = 200
         start = 0
-        text_length = len(text)
-        idx = 0
-        while start < text_length:
-            end = min(start + chunk_size, text_length)
-            chunk_text = text[start:end]
-            chunks.append({
-                "id": f"{source}_{idx}",
-                "text": chunk_text,
-                "source": source
-            })
-            idx += 1
+        length = len(text)
+        while start < length:
+            end = start + chunk_size
+            chunk = text[start:end]
+            chunks.append({"text": chunk, "source": source})
             start += chunk_size - overlap
         return chunks
 
-    def add_documents(self, docs: List[Dict]):
-        texts = [d["text"] for d in docs]
-        ids = [d["id"] for d in docs]
-        metadatas = [{"source": d["source"]} for d in docs]
-        embeddings = self.model.encode(texts).tolist()
-        self.collection.add(ids=ids, documents=texts, metadatas=metadatas, embeddings=embeddings)
+    def add_documents(self, chunks: List[Dict[str, str]]) -> None:
+        if not chunks:
+            return
+        ids: List[str] = []
+        docs: List[str] = []
+        metadatas: List[Dict[str, Any]] = []
+        for chunk in chunks:
+            ids.append(str(uuid.uuid4()))
+            docs.append(chunk["text"])
+            metadatas.append({"source": chunk["source"]})
+        self.collection.add(ids=ids, documents=docs, metadatas=metadatas)
 
-    def query(self, query_text: str, n_results: int = 5) -> Dict:
-        results = self.collection.query(query_texts=[query_text], n_results=n_results)
-        return results
+    def query(self, query_text: str, n_results: int = 8) -> Dict[str, Any]:
+        embedding = self.embedder.encode([query_text]).tolist()
+        return self.collection.query(query_embeddings=embedding, n_results=n_results)
+
+    def store_html_source(self, filename: str, text: str) -> None:
+        self.html_sources[filename] = text
+
+    def get_html_source(self, filename: str) -> str:
+        return self.html_sources.get(filename, "")
+
+    def get_first_html_source(self) -> str:
+        if not self.html_sources:
+            return ""
+        return next(iter(self.html_sources.values()))

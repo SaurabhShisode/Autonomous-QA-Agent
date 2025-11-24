@@ -5,3 +5,4 @@ chromadb
 groq
 pypdf
 beautifulsoup4
+PyMuPDF

@@ -17,6 +17,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.post("/upload_documents")
 async def upload_documents(files: List[UploadFile] = File(...)):
     all_chunks = []
@@ -25,13 +26,16 @@ async def upload_documents(files: List[UploadFile] = File(...)):
         text = extract_text(uploaded.filename, content)
         chunks = db.chunk_text(text, uploaded.filename)
         all_chunks.extend(chunks)
+
     if all_chunks:
         db.add_documents(all_chunks)
+
     return {"status": "ok", "chunks_indexed": len(all_chunks)}
 
 @app.post("/build_kb")
 async def build_kb():
-    return {"status": "ok", "message": "Knowledge base is ready"}
+    return {"status": "ok", "message": "Knowledge base built"}
+
 
 @app.post("/generate_test_cases")
 async def api_generate_test_cases(query: str = Form(...)):
@@ -39,10 +43,6 @@ async def api_generate_test_cases(query: str = Form(...)):
     return result
 
 @app.post("/generate_script")
-async def api_generate_script(
-    test_case_text: str = Form(...),
-    feature_query: str = Form(...),
-    html_source: str = Form(...),
-):
-    result = generate_selenium_script(db, test_case_text, feature_query, html_source)
-    return result
+async def api_generate_script(test_case_text: str = Form(...)):
+    result = generate_selenium_script(db, test_case_text)
+    return {"script": result.get("raw_output", "")}

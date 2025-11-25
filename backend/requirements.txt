@@ -3,6 +3,7 @@ uvicorn
 python-multipart
 
 chromadb
+sentence_transformers
 onnxruntime
 
 numpy

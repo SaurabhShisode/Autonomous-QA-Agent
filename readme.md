@@ -134,7 +134,7 @@ User interface
 
 
 
-# **4. Tech Stack**
+## **4. Tech Stack**
 
 ### **Frontend**
 
@@ -157,36 +157,59 @@ User interface
 
 ## 5. Setup Instructions
 
-Prerequisites: Python 3.10+
+Prerequisites
+- Python 3.10+
+- Git (optional)
 
 Backend
+
+1. Create and activate a virtual environment, then install dependencies:
 ```bash
 cd backend
-python -m venv venv
+python -m venv .venv
+
 # macOS / Linux
-source venv/bin/activate
-# Windows
-# venv\Scripts\activate
+source .venv/bin/activate
+
+# Windows (PowerShell)
+.venv\Scripts\Activate.ps1
+
+# Windows (cmd)
+.venv\Scripts\activate.bat
+
 pip install -r requirements.txt
 ```
 
-Run backend:
+2. Run the backend:
 ```bash
 uvicorn main:app --reload --port 8000
 ```
 
+(Optional) Set required environment variables before starting the backend:
+```bash
+# macOS / Linux
+export GROQ_API_KEY="your_groq_api_key"
 
+# Windows (PowerShell)
+$env:GROQ_API_KEY = "your_groq_api_key"
+```
 
-## **Frontend Setup**
+Frontend
 
+1. Start the Streamlit frontend:
 ```bash
 cd frontend
 streamlit run app.py
 ```
 
+Notes
+- Start the backend before the frontend. Backend defaults to port 8000; Streamlit defaults to 8501.
+- Use the appropriate virtual environment activation command for your shell/OS.
+- Replace placeholder keys/values with your actual service credentials.
 
 
-# **6. Usage Guide**
+
+## **6. Usage Guide**
 
 ### **Phase 1: Upload Files**
 

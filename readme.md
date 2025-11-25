@@ -103,22 +103,22 @@ The Streamlit UI shows the generated script cleanly formatted.
         │          Chroma Vector Database           │
         └───────────────────────────────────────────┘
                                |
-             =====================================
-                            Phase 2 Query
-             =====================================
+            =====================================
+                        Phase 2 Query
+            =====================================
                                |
                                V
-                 Retrieve Relevant Chunks
+                   Retrieve Relevant Chunks
                                |
                                V
-                 LLM Generates Test Cases
+                   LLM Generates Test Cases
                                |
                                V
-               User Selects a Single Test Case
+                User Selects a Single Test Case
                                |
-                =====================================
+            =====================================
                         Phase 3 Script Gen
-                =====================================
+            =====================================
                                |
                                V
         LLM Reads HTML + Test Case + Context → Script

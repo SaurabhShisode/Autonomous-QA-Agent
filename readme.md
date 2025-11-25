@@ -16,7 +16,7 @@ The system uses a three-phase workflow with a FastAPI backend and a Streamlit fr
 The workflow runs in three phases.
 
 
-## Phase 1 — Document Upload & Knowledge Base Construction
+### Phase 1 — Document Upload & Knowledge Base Construction
 
 Users upload any number of supporting documents, for example:
 - PDF requirement files

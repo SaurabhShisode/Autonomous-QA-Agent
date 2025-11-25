@@ -1,29 +1,29 @@
-fastapi==0.109.0
-uvicorn==0.27.0
-python-multipart==0.0.9
+fastapi
+uvicorn
+python-multipart
 
-chromadb==1.3.5
-onnxruntime==1.17.3
+chromadb
+onnxruntime
 
-numpy==1.26.4
-scikit-learn==1.3.2
-scipy==1.11.4
+numpy
+scikit-learn
+scipy
 
-PyMuPDF==1.23.7
-beautifulsoup4==4.12.2
+PyMuPDF
+beautifulsoup4
 
-requests==2.31.0
-python-dotenv==1.0.1
+requests
+python-dotenv
 
-groq==0.5.1
+groq
 
-pydantic==2.6.0
-pydantic-core==2.16.1
-typing-extensions==4.9.0
+pydantic
+pydantic-core
+typing-extensions
 
-orjson==3.9.12
-regex==2023.12.25
+orjson
+regex
 
-httpx==0.25.2
-h11==0.14.0
-watchfiles==0.22.0
+httpx
+h11
+watchfiles

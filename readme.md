@@ -11,13 +11,35 @@ This repository provides an end-to-end autonomous QA assistant that:
 The system uses a three-phase workflow with a FastAPI backend and a Streamlit frontend. Key components include ChromaDB, Sentence Transformers, and the Groq LLM.
 
 
-
 ## 1. How the Agent Works
 
 The workflow runs in three phases.
 
 
+## Phase 1 — Document Upload & Knowledge Base Construction
+
+Users upload any number of supporting documents, for example:
+- PDF requirement files
+- UI HTML templates (e.g., `checkout.html`)
+- System specifications
+- JSON configuration files
+- Markdown or plain text documents
+
+Backend processing pipeline:
+1. Extract and normalize text (format-specific parsers):
+  - PyMuPDF for PDFs
+  - BeautifulSoup for HTML
+  - Native JSON parsing for structured data
+  - Plain text / Markdown parsing and simple cleanup
+2. Clean, normalize, and annotate extracted content (preserve source metadata).
+3. Split content into overlapping semantic chunks for better retrieval.
+4. Generate embeddings for each chunk using the Sentence Transformers model `all-MiniLM-L6-v2`.
+5. Store chunk embeddings and metadata in ChromaDB.
+
+Result: a grounded, queryable knowledge base (with provenance) that is used to retrieve context for all subsequent LLM generations (test case and script generation).
+
 This produces a grounded, queryable knowledge base for all subsequent LLM generations.
+
 
 ### Phase 2 — Test Case Generation
 1. User submits a request (example: “Generate all positive and negative test cases for the discount code feature.”)  
@@ -45,43 +67,6 @@ The generated script is displayed in Streamlit and can be executed by the user.
 
 ## 2. System Architecture Overview
 
-> Generate all positive and negative test cases for discount code validation.
-
-The backend:
-
-1. Searches ChromaDB for relevant text chunks  
-2. Sends retrieved chunks + user query to the Groq LLM  
-3. LLM generates test cases in **Markdown table format**
-
-The Streamlit UI displays the raw Markdown directly.
-
-Users then manually **copy any one test case** and paste it into Phase 3.
-
-
-
-## **Phase 3. Selenium Script Generation**
-
-Users paste one selected test case into a text box.
-
-The backend:
-
-1. Retrieves relevant context again from ChromaDB  
-2. Loads the uploaded checkout.html  
-3. Sends:
-    - HTML source
-    - Test case text
-    - Annotated context  
-    to the LLM
-4. Model produces a **fully grounded Selenium Python script**
-    - Uses only real locators from the provided HTML
-    - No invented IDs
-    - Aligned to the selected test case
-
-The Streamlit UI shows the generated script cleanly formatted.
-
-
-
-# **2. System Architecture**
 
 ```
                  ┌──────────────────────────┐
@@ -146,20 +131,6 @@ Selenium script generator
 User interface
 - Clear three-phase workflow in Streamlit
 - Simple document upload, immediate generation of test cases and scripts
-
-
-
-## 4. Tech Stack
-
-### ✔ AI based Selenium script generation
-
-Scripts grounded in uploaded HTML
-
-### ✔ Clean Streamlit UI
-
-3 phase workflow matching assignment instructions
-
-### ✔ FastAPI backend + Streamlit frontend separation
 
 
 
@@ -236,25 +207,6 @@ streamlit run app.py
 1. Paste one selected test case  
 2. Click **Generate Selenium Script**  
 3. Script appears in a code block
-
-
-## 6. Usage Guide
-
-Phase 1 — Upload & Index
-1. Upload PDFs, HTML, JSON, or text files  
-2. Click “Upload and Index”  
-3. Click “Build Knowledge Base”
-
-Phase 2 — Generate Test Cases
-1. Enter a query (e.g., "Generate test cases for login validation")  
-2. Click “Generate Test Cases”  
-3. Review Markdown table output  
-4. Copy one test case scenario for script generation
-
-Phase 3 — Generate Selenium Script
-1. Paste the selected test case into the UI  
-2. Click “Generate Selenium Script”  
-3. The generated Python Selenium script appears formatted in the UI
 
 
 

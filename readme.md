@@ -10,13 +10,12 @@ This project implements an autonomous QA testing assistant capable of:
 
 The system follows a strict architecture described in the assignment and combines **FastAPI**, **Chroma Vector Database**, **Sentence Transformers embeddings**, and **Groq LLM** to automatically produce consistent, grounded QA output.
 
----
+
 
 ## **1. How the System Works**
 
 The system works in 3 clearly defined phases:
 
----
 
 ## **Phase 1. Document Upload and Knowledge Base Construction**
 
@@ -39,7 +38,7 @@ The backend:
 The result:  
 A complete **context-aware knowledge base** grounded only in what the user uploads.
 
----
+
 
 ## **Phase 2. Test Case Generation**
 
@@ -57,7 +56,7 @@ The Streamlit UI displays the raw Markdown directly.
 
 Users then manually **copy any one test case** and paste it into Phase 3.
 
----
+
 
 ## **Phase 3. Selenium Script Generation**
 
@@ -79,7 +78,7 @@ The backend:
 
 The Streamlit UI shows the generated script cleanly formatted.
 
----
+
 
 # **2. System Architecture**
 
@@ -127,7 +126,6 @@ The Streamlit UI shows the generated script cleanly formatted.
         Generates Selenium Script
 ```
 
----
 
 # **3. Features**
 
@@ -157,7 +155,7 @@ Scripts grounded in uploaded HTML
 
 ### ✔ FastAPI backend + Streamlit frontend separation
 
----
+
 
 # **4. Tech Stack**
 
@@ -176,7 +174,7 @@ Scripts grounded in uploaded HTML
 - PyMuPDF
 - BeautifulSoup
 
----
+
 
 # **5. Setup Instructions**
 
@@ -195,7 +193,7 @@ pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
----
+
 
 ## **Frontend Setup**
 
@@ -204,7 +202,7 @@ cd frontend
 streamlit run app.py
 ```
 
----
+
 
 # **6. Usage Guide**
 

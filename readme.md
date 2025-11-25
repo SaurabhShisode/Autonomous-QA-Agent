@@ -2,48 +2,48 @@
 
 AI-powered Test Case Generator and Selenium Script Writer
 
-This project implements an autonomous QA testing assistant capable of:
+This repository provides an end-to-end autonomous QA assistant that:
+- Reads and understands product documentation (PDF, HTML, JSON, TXT, Markdown)
+- Builds a grounded knowledge base using Retrieval-Augmented Generation (RAG)
+- Generates functional positive, negative, and edge-case test cases
+- Produces Selenium Python scripts strictly grounded in uploaded HTML
 
-1. **Reading and understanding product documentation (PDF, HTML, JSON, TXT, MD).**
-2. **Generating high quality functional test cases using RAG (Retrieval Augmented Generation).**
-3. **Generating Selenium automation scripts from user selected test cases.**
+The system uses a three-phase workflow with a FastAPI backend and a Streamlit frontend. Key components include ChromaDB, Sentence Transformers, and the Groq LLM.
 
-The system follows a strict architecture described in the assignment and combines **FastAPI**, **Chroma Vector Database**, **Sentence Transformers embeddings**, and **Groq LLM** to automatically produce consistent, grounded QA output.
 
----
 
-## **1. How the System Works**
+## 1. How the Agent Works
 
-The system works in 3 clearly defined phases:
+The workflow runs in three phases.
 
----
 
-## **Phase 1. Document Upload and Knowledge Base Construction**
+This produces a grounded, queryable knowledge base for all subsequent LLM generations.
 
-Users upload any of the following:
+### Phase 2 — Test Case Generation
+1. User submits a request (example: “Generate all positive and negative test cases for the discount code feature.”)  
+2. Backend retrieves relevant knowledge chunks from ChromaDB  
+3. The user query plus retrieved context is sent to the Groq LLM  
+4. The LLM returns structured test cases, presented in Markdown table format in the Streamlit UI
 
-- Product specification PDFs
-- Test plans
-- Requirement documents
-- HTML UI source (checkout.html)
-- JSON config files
-- Markdown or plain text files
+Users review the test cases and select one scenario for script generation.
 
-The backend:
+### Phase 3 — Selenium Script Generation
+When a test case is selected (pasted into the UI), the backend:
+1. Retrieves related context from ChromaDB  
+2. Loads the uploaded HTML (e.g., `checkout.html`) and extracts the DOM structure  
+3. Sends the HTML content, DOM, relevant context, and the selected test case to the LLM
 
-- Extracts text from files (PDF, HTML, JSON)
-- Splits content into overlapping chunks
-- Embeds chunks using **sentence-transformers all-MiniLM-L6-v2**
-- Stores embeddings in **ChromaDB** for retrieval
+The LLM generates a Selenium Python script that:
+- Is grounded in the real HTML
+- Uses only valid selectors from the provided DOM
+- Matches the selected test scenario
+- Avoids hallucinated IDs or elements
 
-The result:  
-A complete **context-aware knowledge base** grounded only in what the user uploads.
+The generated script is displayed in Streamlit and can be executed by the user.
 
----
 
-## **Phase 2. Test Case Generation**
 
-Users type a query such as:
+## 2. System Architecture Overview
 
 > Generate all positive and negative test cases for discount code validation.
 
@@ -55,9 +55,9 @@ The backend:
 
 The Streamlit UI displays the raw Markdown directly.
 
-Users review the test cases and select one scenario for script generation.
+Users then manually **copy any one test case** and paste it into Phase 3.
 
----
+
 
 ## **Phase 3. Selenium Script Generation**
 
@@ -79,73 +79,77 @@ The backend:
 
 The Streamlit UI shows the generated script cleanly formatted.
 
----
+
 
 # **2. System Architecture**
 
 ```
-                 DOCUMENT UPLOAD
-                          |
-                          V
-        ┌──────────────────────────┐
-        │   Text Extraction Layer  │
-        └──────────────────────────┘
-          | PDF, HTML, JSON Parsing
-          V
-        ┌──────────────────────────┐
-        │   Chunking + Embedding   │
-        └──────────────────────────┘
-          | Sentence Transformers
-          V
-        ┌──────────────────────────┐
-        │     Chroma Vector DB     │
-        └──────────────────────────┘
-                          |
-                          |
-         =============================
-                Phase 2 Query
-         =============================
-                          |
-                          V
-            Retrieve Relevant Chunks
-                          |
-                          V
-          LLM Generates Test Cases
-                          |
-                          V
-        User Selects One Test Case
-                          |
-                          |
-         =============================
-                Phase 3 Generation
-         =============================
-                          |
-                          V
-  LLM Reads: HTML + Context + Test Case
-                          |
-                          V
-        Generates Selenium Script
+                 ┌──────────────────────────┐
+                 │      DOCUMENT UPLOAD     │
+                 └──────────────────────────┘
+                               |
+                               V
+        ┌───────────────────────────────────────────┐
+        │        Text Extraction + Preprocessing    │
+        └───────────────────────────────────────────┘
+                               |
+                               V
+        ┌───────────────────────────────────────────┐
+        │       Chunking + Sentence Embeddings      │
+        └───────────────────────────────────────────┘
+                               |
+                               V
+        ┌───────────────────────────────────────────┐
+        │          Chroma Vector Database           │
+        └───────────────────────────────────────────┘
+                               |
+             =====================================
+                            Phase 2 Query
+             =====================================
+                               |
+                               V
+                 Retrieve Relevant Chunks
+                               |
+                               V
+                 LLM Generates Test Cases
+                               |
+                               V
+               User Selects a Single Test Case
+                               |
+                =====================================
+                        Phase 3 Script Gen
+                =====================================
+                               |
+                               V
+        LLM Reads HTML + Test Case + Context → Script
 ```
 
----
 
-# **3. Features**
 
-### ✔ Upload multiple document formats
+## 3. Key Features
 
-PDF, TXT, JSON, MD, HTML
+Document handling
+- Supports PDF, HTML, Markdown, JSON, and plain text
+- Automatic extraction, cleaning, and chunking
+- HTML DOM parsing for reliable locator extraction
 
-### ✔ Automatic text extraction
+RAG-based test case generator
+- Semantic search via ChromaDB
+- Structured Markdown output (tables)
+- Positive, negative, and edge-case tests
 
-PyMuPDF for PDF, BeautifulSoup for HTML, JSON prettifier
+Selenium script generator
+- Python Selenium script output
+- Grounded only in the uploaded UI HTML (no hallucinated locators)
+- Clear step-by-step action mapping
 
-### ✔ Smart chunking and embeddings
+User interface
+- Clear three-phase workflow in Streamlit
+- Simple document upload, immediate generation of test cases and scripts
 
-Overlap based chunking for better semantic recall
 
-### ✔ AI based test case generation
 
-Markdown table format
+## 4. Tech Stack
 
 ### ✔ AI based Selenium script generation
 
@@ -157,7 +161,7 @@ Scripts grounded in uploaded HTML
 
 ### ✔ FastAPI backend + Streamlit frontend separation
 
----
+
 
 # **4. Tech Stack**
 
@@ -172,16 +176,19 @@ Scripts grounded in uploaded HTML
 - Uvicorn
 - Groq LLM API
 - ChromaDB
-- Sentence Transformers
-- PyMuPDF
-- BeautifulSoup
+- Sentence Transformers (`all-MiniLM-L6-v2`)
+- Groq LLM API
+- PyMuPDF (PDF extraction)
+- BeautifulSoup (HTML parsing)
 
----
 
-# **5. Setup Instructions**
 
-## **Backend Setup**
 
+## 5. Setup Instructions
+
+Prerequisites: Python 3.10+
+
+Backend
 ```bash
 cd backend
 python -m venv venv
@@ -197,7 +204,7 @@ Run backend:
 uvicorn main:app --reload --port 8000
 ```
 
----
+
 
 ## **Frontend Setup**
 
@@ -206,7 +213,7 @@ cd frontend
 streamlit run app.py
 ```
 
----
+
 
 # **6. Usage Guide**
 
@@ -230,4 +237,35 @@ streamlit run app.py
 2. Click **Generate Selenium Script**  
 3. Script appears in a code block
 
+
+## 6. Usage Guide
+
+Phase 1 — Upload & Index
+1. Upload PDFs, HTML, JSON, or text files  
+2. Click “Upload and Index”  
+3. Click “Build Knowledge Base”
+
+Phase 2 — Generate Test Cases
+1. Enter a query (e.g., "Generate test cases for login validation")  
+2. Click “Generate Test Cases”  
+3. Review Markdown table output  
+4. Copy one test case scenario for script generation
+
+Phase 3 — Generate Selenium Script
+1. Paste the selected test case into the UI  
+2. Click “Generate Selenium Script”  
+3. The generated Python Selenium script appears formatted in the UI
+
+
+
+## 7. Supported Document Formats
+
+| Format | Purpose                                       |
+| ------ | --------------------------------------------- |
+| PDF    | Requirement docs, SRS, functional flows       |
+| HTML   | UI structure for generating grounded locators |
+| JSON   | Product configuration, button mapping         |
+| TXT/MD | Notes, descriptions, instructions             |
+
+These uploaded documents are the basis for both test cases and automation scripts. All outputs are strictly grounded in the provided content.
 
